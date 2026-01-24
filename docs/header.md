@@ -212,31 +212,27 @@ To keep group memberships synchronized automatically, you can configure GitLab t
 
 #### Pipeline Configuration for Auto-Apply
 
-Update your `.gitlab-ci.yml` to support auto-apply on scheduled runs. Add the following to your deploy stage:
+The project uses GitLab's Terraform template. To enable auto-apply on scheduled runs, update your `.gitlab-ci.yml` deploy stage:
 
 ```yaml
 deploy:
-  stage: deploy
-  image: 
-    name: hashicorp/terraform:latest
-    entrypoint: [""]
-  before_script:
-    - cd ${TF_ROOT}
-    - echo "$GOOGLEWORKSPACE_CREDENTIALS_B64" | base64 -d > gcp-credentials.json
-    - export GOOGLEWORKSPACE_CREDENTIALS=${TF_ROOT}/gcp-credentials.json
-    - terraform init
-  script:
-    - terraform apply plan.tfplan
+  extends: .terraform:deploy
   dependencies:
     - build
-  only:
-    - main
-    - schedules
+  environment:
+    name: $TF_STATE_NAME
+    action: start
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $TERRAFORM_AUTO_APPLY == "true"'
       when: always  # Auto-apply for scheduled runs when flag is set
     - when: manual  # Default to manual approval for regular runs
 ```
+
+The template handles:
+- Terraform initialization
+- Service account credentials decoding (from `GOOGLEWORKSPACE_CREDENTIALS_B64`)
+- State management with GitLab backend
+- Plan application
 
 #### Recommended Sync Frequency
 

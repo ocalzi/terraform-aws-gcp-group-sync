@@ -1,5 +1,13 @@
 ## Troubleshooting
 
+### Groups Not Syncing via SCIM
+
+**Issue**: Groups from Google Workspace don't automatically appear in AWS Identity Center
+
+**Explanation**: This is **expected behavior**. As documented in the [AWS Identity Center documentation](https://docs.aws.amazon.com/singlesignon/latest/userguide/gs-gwp.html), the Google Workspace SCIM integration only supports automatic user provisioning, not group provisioning. This is precisely why this Terraform project exists - to bridge this gap by manually creating and managing groups.
+
+**Solution**: Use this Terraform project to create and sync groups from Google Workspace to AWS Identity Center.
+
 ### User Not Found in AWS Identity Center
 
 **Issue**: User exists in Google Workspace but not found in AWS Identity Center
@@ -8,6 +16,7 @@
 - Verify SCIM sync is properly configured
 - Check user is active in Google Workspace
 - Wait for SCIM sync cycle to complete (usually 40 minutes)
+- Remember: Users must be synced via SCIM first before this Terraform can add them to groups
 
 ### Permission Denied Errors
 

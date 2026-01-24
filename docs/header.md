@@ -2,6 +2,10 @@
 
 This Terraform project automates the synchronization of Google Workspace groups and their members to AWS Identity Center (formerly AWS SSO). It ensures that organizational group structures and user memberships remain consistent across both cloud platforms.
 
+## A Note on Continuous Improvement
+
+This project embodies the principle that no work is complete in isolation. Every codebase benefits from the insights, experiences, and contributions of others. Your feedback, improvements, and perspectives are not just welcome—they're essential to making this solution better for everyone.
+
 ## Features
 
 - **Group Synchronization**: Automatically mirrors Google Workspace groups to AWS Identity Center

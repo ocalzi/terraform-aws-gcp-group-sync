@@ -42,7 +42,8 @@ provider "googleworkspace" {
   # Configuration details (like impersonated_user and credentials file) 
   # are omitted here but required for execution.
   customer_id             = "YOUR_CUSTOMER_ID" # Replace with your actual customer ID
-  credentials             = file("./path-to-your-service-account-key.json")
+  # For local testing, you can specify the path to your service account key file
+  #credentials             = file("./path-to-your-service-account-key.json")
   impersonated_user_email = "admin@yourdomain.com"
   oauth_scopes = [
     "https://www.googleapis.com/auth/admin.directory.user",

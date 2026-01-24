@@ -37,24 +37,3 @@ resource "aws_identitystore_group" "identity_center_groups" {
 
   description = "Group for federated access from GCP: ${each.value.gcp_group_email}"
 }
-
-# -----------------------------------------------------
-# 3. Attach Permission Sets (Instead of Policy Attachments)
-# -----------------------------------------------------
-# NOTE: Permissions are granted by creating Permission Sets and 
-# assigning them to the groups. This step is complex and usually requires 
-# existing Permission Sets.
-
-/*
-resource "aws_ssoadmin_account_assignment" "group_assignments" {
-  for_each = aws_identitystore_group.identity_center_groups
-  
-  # Assuming you have a Permission Set ARN defined in your variables:
-  permission_set_arn = var.permission_set_arns[each.key]
-  
-  principal_id       = each.value.group_id
-  principal_type     = "GROUP"
-  target_id          = var.aws_account_id # The account ID to assign permissions to
-  instance_arn       = data.aws_ssoadmin_instances.current.arns[0]
-}
-*/

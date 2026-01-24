@@ -1,0 +1,49 @@
+include:
+  - project: "container/templates/terraform-images"
+    file: "/templates/Terraform.gitlab-ci.yml"
+
+default:
+  image:
+    # The image name is required. The template doesn't set it.
+    name: "$HARBOR_HOST/gitlab-repository/terraform:1.8.5"
+variables:
+    # 1. Name of the decoded JSON key file
+    GOOGLEWORKSPACE_CREDENTIALS: "google-workspace-key.json" 
+# 2. Decoding Logic in before_script
+before_script:
+  - echo "Decoding Base64 JSON key into ${GOOGLEWORKSPACE_CREDENTIALS}..."
+  # Decode the CI/CD variable (TF_GCP_JSON_KEY_BASE64) and write to file.
+  # The file will exist in the workspace for the duration of the job's script.
+  - echo "$GOOGLEWORKSPACE_CREDENTIALS_B64" | base64 -d > "${GOOGLEWORKSPACE_CREDENTIALS}"
+  - echo "Service Account Key decoded successfully."
+  # NOTE: You must update your provider.tf to reference this filename!
+  - cat ./${GOOGLEWORKSPACE_CREDENTIALS}
+    
+stages:
+  - validate
+  - test
+  - build
+  - deploy
+  - cleanup
+
+fmt:
+  extends: .terraform:fmt
+  needs: []
+
+validate:
+  extends: .terraform:validate
+  needs: []
+
+build:
+  extends: .terraform:build
+  environment:
+    name: $TF_STATE_NAME
+    action: prepare
+
+deploy:
+  extends: .terraform:deploy
+  dependencies:
+    - build
+  environment:
+    name: $TF_STATE_NAME
+    action: start

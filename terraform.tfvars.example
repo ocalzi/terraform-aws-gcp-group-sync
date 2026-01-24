@@ -1,0 +1,32 @@
+# AWS Credentials
+# Note: It's recommended to use AWS credentials file (~/.aws/credentials) 
+# or environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) instead
+access_key = "YOUR_AWS_ACCESS_KEY"
+secret_key = "YOUR_AWS_SECRET_KEY"
+
+# AWS Configuration
+aws_region     = "eu-west-3"
+aws_account_id = "123456789012"
+
+# GCP SAML Identity Provider ARN
+gcp_saml_idp_arn = "arn:aws:sso:::instance/ssoins-xxxxxxxxxxxxx"
+
+# Group Mappings
+# Map Google Workspace groups to AWS Identity Center groups with their associated policies
+group_mappings = {
+  example_admin = {
+    gcp_group_email = "admins@example.com"
+    aws_role_name   = "GCP-Admin-Role"
+    aws_policy_arn  = "arn:aws:iam::aws:policy/AdministratorAccess"
+  }
+  example_readonly = {
+    gcp_group_email = "viewers@example.com"
+    aws_role_name   = "GCP-ReadOnly-Role"
+    aws_policy_arn  = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+  }
+  example_developers = {
+    gcp_group_email = "developers@example.com"
+    aws_role_name   = "GCP-Developer-Role"
+    aws_policy_arn  = "arn:aws:iam::aws:policy/PowerUserAccess"
+  }
+}

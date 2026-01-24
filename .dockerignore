@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.gitlab-ci.yml
+.github/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Data and outputs
+data/output/
+input_archive/
+
+# Tests
+tests/
+.pre-commit-config.yaml
+
+# Docker
+Containerfile
+docker-compose.yml
+.dockerignore
+
+# Cache
+.cache/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+scripts/
+Makefile
+WHATS_NEXT.md
+FINAL_CLEANUP_SUMMARY.md

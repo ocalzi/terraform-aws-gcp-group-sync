@@ -514,7 +514,36 @@ When making changes:
 3. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
 4. Test changes in a non-production environment first
 
-## AI
+## Tools Used
 
-This project have been done with the support of AI.
+This project was created and managed using the following tools:
+
+### Infrastructure as Code
+- **Terraform** - Infrastructure provisioning and management
+- **tfswitch** - Terraform version management tool
+- **terraform-docs** - Automated documentation generation for Terraform modules
+
+### CI/CD & Version Control
+- **GitLab CI** - Continuous integration and deployment pipeline
+- **Git** - Version control system
+- **pre-commit** - Git hook framework for identifying issues before commit
+
+### Containerization
+- **Docker** - Containerization platform for consistent development environments
+
+### AI Development Assistant
+- **OpenCode** - AI-powered coding assistant for project development and automation
+
+### Cloud Providers
+- **Google Cloud Platform (GCP)** - Google Workspace integration
+- **Amazon Web Services (AWS)** - AWS Identity Center management
+
+## Contributing
+
+When making changes:
+
+1. Run `terraform fmt` to format code
+2. Run `terraform validate` to check syntax
+3. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
+4. Test changes in a non-production environment first
 <!-- END_TF_DOCS -->

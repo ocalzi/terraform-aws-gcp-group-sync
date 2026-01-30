@@ -1,12 +1,11 @@
-# AWS Credentials
-# Recommended: use AWS credentials file (~/.aws/credentials),
-# environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY),
-# or IAM roles instead of hardcoding keys here.
-# access_key = "YOUR_AWS_ACCESS_KEY"
-# secret_key = "YOUR_AWS_SECRET_KEY"
-
-# AWS Configuration
-aws_region = "eu-west-3"
+# =============================================================================
+# Example: Variable Values for the Module
+# =============================================================================
+# Provider configuration (AWS credentials, region, GCP service account)
+# must be set in your root module or via environment variables.
+#
+# See examples/complete/main.tf for a full working example.
+# =============================================================================
 
 # Group Mappings
 # Map Google Workspace groups to AWS Identity Center groups.

@@ -1,0 +1,35 @@
+# =============================================================================
+# Standalone Configuration
+# =============================================================================
+# Copy this file to terraform.tfvars and fill in your values.
+#
+# For AWS credentials, use environment variables or ~/.aws/credentials:
+#   export AWS_ACCESS_KEY_ID="..."
+#   export AWS_SECRET_ACCESS_KEY="..."
+#
+# For Google Workspace, set the path to your service account key:
+#   export GOOGLEWORKSPACE_CREDENTIALS="./service-account-key.json"
+# =============================================================================
+
+# AWS
+aws_region = "eu-west-3"
+
+# Google Workspace
+google_workspace_customer_id = "C01234567"
+google_workspace_admin_email = "admin@yourdomain.com"
+
+# Group Mappings
+group_mappings = {
+  admins = {
+    gcp_group_email = "admins@yourdomain.com"
+    aws_role_name   = "GCP-Admin-Role"
+  }
+  developers = {
+    gcp_group_email = "developers@yourdomain.com"
+    aws_role_name   = "GCP-Developer-Role"
+  }
+  readonly = {
+    gcp_group_email = "readonly@yourdomain.com"
+    aws_role_name   = "GCP-ReadOnly-Role"
+  }
+}

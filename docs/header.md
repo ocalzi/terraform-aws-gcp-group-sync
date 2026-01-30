@@ -59,7 +59,12 @@ provider "googleworkspace" {
 }
 ```
 
-See [`examples/complete/main.tf`](examples/complete/main.tf) for a full working example.
+### Examples
+
+| Example | Description |
+|---|---|
+| [`examples/complete`](examples/complete/main.tf) | Use as a **Terraform Registry module** — caller configures providers |
+| [`examples/standalone`](examples/standalone/) | Use as a **standalone project** — clone, configure providers inline, run with GitLab CI/CD |
 
 ## A Note on Continuous Improvement
 

@@ -12,7 +12,7 @@
 
 **Issue**: User exists in Google Workspace but not found in AWS Identity Center
 
-**Solution**: 
+**Solution**:
 - Verify SCIM sync is properly configured
 - Check user is active in Google Workspace
 - Wait for SCIM sync cycle to complete (usually 40 minutes)
@@ -43,7 +43,7 @@
    - `*.tfstate` files
    - Service account JSON keys
 
-2. **Use GitLab CI/CD Variables**: Store all secrets as protected, masked variables
+2. **Use CI/CD Variables**: Store all secrets as protected, masked variables in GitLab CI or GitHub Actions secrets
 
 3. **Rotate Credentials**: Regularly rotate AWS keys and service account keys
 
@@ -51,14 +51,30 @@
 
 5. **Enable Backend Encryption**: GitLab manages state encryption automatically
 
+## Testing
+
+This project uses **Terraform native tests** (`.tftest.hcl`, requires Terraform >= 1.6) with mock providers:
+
+```bash
+terraform init -backend=false
+terraform test -verbose
+```
+
+Test suites cover:
+- Variable validation and defaults
+- Group creation logic
+- Membership synchronization pipeline
+- Output structure
+
 ## Contributing
 
 When making changes:
 
 1. Run `terraform fmt` to format code
 2. Run `terraform validate` to check syntax
-3. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
-4. Test changes in a non-production environment first
+3. Run `terraform test` to execute the test suite
+4. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
+5. Test changes in a non-production environment first
 
 ## Tools Used
 
@@ -70,25 +86,14 @@ This project was created and managed using the following tools:
 - **terraform-docs** - Automated documentation generation for Terraform modules
 
 ### CI/CD & Version Control
-- **GitLab CI** - Continuous integration and deployment pipeline
+- **GitHub Actions** - CI pipeline (validate, test, lint, security scan) and release automation
+- **GitLab CI** - Deployment pipeline for scheduled synchronization
 - **Git** - Version control system
 - **pre-commit** - Git hook framework for identifying issues before commit
 
 ### Containerization
 - **Docker** - Containerization platform for consistent development environments
 
-### AI Development Assistant
-- **OpenCode** - AI-powered coding assistant for project development and automation
-
 ### Cloud Providers
 - **Google Cloud Platform (GCP)** - Google Workspace integration
 - **Amazon Web Services (AWS)** - AWS Identity Center management
-
-## Contributing
-
-When making changes:
-
-1. Run `terraform fmt` to format code
-2. Run `terraform validate` to check syntax
-3. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
-4. Test changes in a non-production environment first

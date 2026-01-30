@@ -96,7 +96,7 @@ jobs:
 
       - name: Check docs are up to date
         run: |
-          terraform-docs .
+          terraform-docs  markdown .
           git diff --exit-code README.md || (echo "README.md is out of date. Run 'terraform-docs .' and commit." && exit 1)
 
   security:

@@ -575,8 +575,8 @@ Google Workspace Groups → Terraform → AWS Identity Center Groups
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 5.0 |
 | <a name="requirement_googleworkspace"></a> [googleworkspace](#requirement\_googleworkspace) | ~> 0.7 |
 
 ## Providers
@@ -601,18 +601,18 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_access_key"></a> [access\_key](#input\_access\_key) | AWS Access Key | `string` | `""` | no |
-| <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | The AWS Account ID where the IAM roles will be created. | `string` | `""` | no |
-| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | defaul aws region | `string` | `"eu-west-3"` | no |
-| <a name="input_gcp_saml_idp_arn"></a> [gcp\_saml\_idp\_arn](#input\_gcp\_saml\_idp\_arn) | The ARN of the GCP SAML Identity Provider in AWS IAM. | `string` | `""` | no |
-| <a name="input_group_mappings"></a> [group\_mappings](#input\_group\_mappings) | A map defining the target GCP groups and their corresponding AWS roles/policies. | <pre>map(object({<br/>    # The full email address of the existing Google Workspace Group<br/>    gcp_group_email = string<br/>    # The name of the AWS IAM Role to be created<br/>    aws_role_name = string<br/>    # The AWS policy ARN to attach to the role<br/>    aws_policy_arn = string<br/>  }))</pre> | `{}` | no |
-| <a name="input_secret_key"></a> [secret\_key](#input\_secret\_key) | AWS Secret Key | `string` | `""` | no |
+| <a name="input_access_key"></a> [access\_key](#input\_access\_key) | AWS Access Key. Prefer using AWS\_ACCESS\_KEY\_ID environment variable or IAM roles instead. | `string` | `""` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region where Identity Center is configured. | `string` | `"eu-west-3"` | no |
+| <a name="input_group_mappings"></a> [group\_mappings](#input\_group\_mappings) | A map defining the target GCP groups and their corresponding AWS Identity Center groups. | <pre>map(object({<br/>    # The full email address of the existing Google Workspace Group<br/>    gcp_group_email = string<br/>    # The display name of the AWS Identity Center group to be created<br/>    aws_role_name = string<br/>    # TODO: Reserved for future use — permission set assignment.<br/>    # The AWS policy ARN to attach to the group's permission set<br/>    aws_policy_arn = optional(string, "")<br/>  }))</pre> | `{}` | no |
+| <a name="input_secret_key"></a> [secret\_key](#input\_secret\_key) | AWS Secret Key. Prefer using AWS\_SECRET\_ACCESS\_KEY environment variable or IAM roles instead. | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_gcp_groups_details"></a> [gcp\_groups\_details](#output\_gcp\_groups\_details) | Details fetched from Google Workspace for the  groups, confirming lookup success. |
+| <a name="output_aws_identity_center_groups"></a> [aws\_identity\_center\_groups](#output\_aws\_identity\_center\_groups) | AWS Identity Center groups created by this module. |
+| <a name="output_gcp_groups_details"></a> [gcp\_groups\_details](#output\_gcp\_groups\_details) | Details fetched from Google Workspace for the configured groups, confirming lookup success. |
+| <a name="output_sync_summary"></a> [sync\_summary](#output\_sync\_summary) | Summary of the synchronization: group count, total memberships, and identity store ID. |
 
 ## Troubleshooting
 
@@ -659,7 +659,7 @@ No modules.
    - `*.tfstate` files
    - Service account JSON keys
 
-2. **Use GitLab CI/CD Variables**: Store all secrets as protected, masked variables
+2. **Use CI/CD Variables**: Store all secrets as protected, masked variables in GitLab CI or GitHub Actions secrets
 
 3. **Rotate Credentials**: Regularly rotate AWS keys and service account keys
 
@@ -667,14 +667,30 @@ No modules.
 
 5. **Enable Backend Encryption**: GitLab manages state encryption automatically
 
+## Testing
+
+This project uses **Terraform native tests** (`.tftest.hcl`, requires Terraform >= 1.6) with mock providers:
+
+```bash
+terraform init -backend=false
+terraform test -verbose
+```
+
+Test suites cover:
+- Variable validation and defaults
+- Group creation logic
+- Membership synchronization pipeline
+- Output structure
+
 ## Contributing
 
 When making changes:
 
 1. Run `terraform fmt` to format code
 2. Run `terraform validate` to check syntax
-3. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
-4. Test changes in a non-production environment first
+3. Run `terraform test` to execute the test suite
+4. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
+5. Test changes in a non-production environment first
 
 ## Tools Used
 
@@ -686,26 +702,15 @@ This project was created and managed using the following tools:
 - **terraform-docs** - Automated documentation generation for Terraform modules
 
 ### CI/CD & Version Control
-- **GitLab CI** - Continuous integration and deployment pipeline
+- **GitHub Actions** - CI pipeline (validate, test, lint, security scan) and release automation
+- **GitLab CI** - Deployment pipeline for scheduled synchronization
 - **Git** - Version control system
 - **pre-commit** - Git hook framework for identifying issues before commit
 
 ### Containerization
 - **Docker** - Containerization platform for consistent development environments
 
-### AI Development Assistant
-- **OpenCode** - AI-powered coding assistant for project development and automation
-
 ### Cloud Providers
 - **Google Cloud Platform (GCP)** - Google Workspace integration
 - **Amazon Web Services (AWS)** - AWS Identity Center management
-
-## Contributing
-
-When making changes:
-
-1. Run `terraform fmt` to format code
-2. Run `terraform validate` to check syntax
-3. Update documentation with `terraform-docs .` (configured via .terraform-docs.yml)
-4. Test changes in a non-production environment first
 <!-- END_TF_DOCS -->

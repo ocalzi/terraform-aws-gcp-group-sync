@@ -4,6 +4,10 @@
 # This module generates realistic test fixtures for
 # use in terraform test (.tftest.hcl) files.
 
+terraform {
+  required_version = ">= 1.6.0"
+}
+
 variable "test_group_mappings" {
   description = "Override group mappings for testing"
   type = map(object({

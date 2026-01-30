@@ -13,15 +13,6 @@ mock_provider "googleworkspace" {
 
 # ----- Default Values -----
 
-run "default_aws_region_is_eu_west_3" {
-  command = plan
-
-  assert {
-    condition     = var.aws_region == "eu-west-3"
-    error_message = "Default AWS region should be eu-west-3"
-  }
-}
-
 run "default_group_mappings_is_empty" {
   command = plan
 
@@ -81,17 +72,22 @@ run "accepts_multiple_group_mappings" {
   }
 }
 
-# ----- Custom Region -----
+# ----- Optional aws_policy_arn -----
 
-run "accepts_custom_aws_region" {
+run "accepts_mapping_without_policy_arn" {
   command = plan
 
   variables {
-    aws_region = "us-east-1"
+    group_mappings = {
+      readonly = {
+        gcp_group_email = "readonly@example.com"
+        aws_role_name   = "GCP-ReadOnly-Role"
+      }
+    }
   }
 
   assert {
-    condition     = var.aws_region == "us-east-1"
-    error_message = "Should accept a custom AWS region"
+    condition     = length(var.group_mappings) == 1
+    error_message = "Should accept a mapping without aws_policy_arn (optional field)"
   }
 }

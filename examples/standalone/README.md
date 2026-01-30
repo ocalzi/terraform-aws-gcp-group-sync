@@ -30,11 +30,26 @@ terraform apply
 
 ## GitLab CI/CD
 
-The standalone example uses the GitLab HTTP backend (`backend "http" {}`). To use it with GitLab CI/CD:
+This folder includes a `.gitlab-ci.yml` pipeline configuration that:
 
-1. Copy the `.gitlab-ci.yml` from the repository root
-2. Set the required CI/CD variables (see root README)
-3. Optionally configure scheduled pipelines for continuous sync
+- Decodes the Google Workspace service account key from a base64 CI/CD variable
+- Runs `validate`, `build` (plan), and `deploy` (apply) stages
+- Uses the GitLab HTTP backend for state management
+
+### Setup
+
+1. Set the required CI/CD variables in your GitLab project (Settings > CI/CD > Variables):
+
+   | Variable | Description | Protected | Masked |
+   |---|---|---|---|
+   | `TF_STATE_NAME` | Terraform state name | No | No |
+   | `GOOGLEWORKSPACE_CREDENTIALS_B64` | Base64-encoded service account JSON key | Yes | Yes |
+   | `TF_VAR_google_workspace_customer_id` | Google Workspace customer ID | No | No |
+   | `TF_VAR_google_workspace_admin_email` | Admin email for impersonation | No | No |
+   | `AWS_ACCESS_KEY_ID` | AWS Access Key | Yes | Yes |
+   | `AWS_SECRET_ACCESS_KEY` | AWS Secret Key | Yes | Yes |
+
+2. Optionally configure [scheduled pipelines](https://docs.gitlab.com/ci/pipelines/schedules/) for continuous sync (e.g., daily at 2 AM: `0 2 * * *`)
 
 ## Files
 
@@ -43,3 +58,4 @@ The standalone example uses the GitLab HTTP backend (`backend "http" {}`). To us
 | `main.tf` | Provider config, backend, and module call |
 | `variables.tf` | Provider and module input variables |
 | `terraform.tfvars.example` | Example variable values |
+| `.gitlab-ci.yml` | GitLab CI/CD pipeline for automated sync |

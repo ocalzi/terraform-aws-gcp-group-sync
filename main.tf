@@ -11,14 +11,14 @@ data "googleworkspace_group" "gcp_groups" {
 }
 
 # -----------------------------------------------------
-# 1. AWS Identity Center Configuration (Data Lookup)
+# 2. AWS Identity Center Configuration (Data Lookup)
 # -----------------------------------------------------
 
 # Get the Identity Store ID for your AWS Organization/Region.
 data "aws_ssoadmin_instances" "current" {}
 
 locals {
-  # Assuming you only have one Identity Center instance per region/account
+  # Assumes a single Identity Center instance per region/account.
   identity_store_id = data.aws_ssoadmin_instances.current.identity_store_ids[0]
 }
 

@@ -32,8 +32,6 @@ locals {
     for m in local.all_memberships : m.user_email
   ])
 
-  # Reference the Identity Store ID defined in main.tf
-  #identity_store_id = data.aws_ssoadmin_instances.current.identity_store_ids[0] # Assumes this local is defined in main.tf
 }
 
 # -----------------------------------------------------
@@ -58,10 +56,10 @@ locals {
     if user.suspended == false
   }
 
-  # Filter the original membership map to only include ACTIVE users.
-  # This map will drive the final membership creation.
+  # Filter the original membership list to only include ACTIVE users.
+  # Keyed by composite "email:group" for stable for_each iteration.
   active_memberships_to_sync = {
-    for k, v in local.all_memberships : k => v
+    for v in local.all_memberships : v.key => v
     if contains(keys(local.active_user_map), v.user_email)
   }
 }
@@ -89,11 +87,10 @@ data "aws_identitystore_user" "synced_users" {
 # Final filter: We only create a membership if the user was successfully looked up in AWS IC.
 # This handles the case where an ACTIVE user hasn't finished SCIM sync yet (transient failure).
 resource "aws_identitystore_group_membership" "synced_memberships" {
-  # Iterate over the active memberships, but use a final filter based on successful AWS lookup.
+  # Iterate over active memberships, with a final filter for users that exist in AWS IC.
+  # This gracefully handles ACTIVE users whose SCIM sync hasn't completed yet.
   for_each = {
-    for k, v in local.active_memberships_to_sync : k => v
-    # Check if the user's email exists as a key in the successfully looked-up AWS users map.
-    # The lookup is guaranteed to succeed for active users that have fully synced.
+    for key, v in local.active_memberships_to_sync : key => v
     if contains(keys(data.aws_identitystore_user.synced_users), v.user_email)
   }
 

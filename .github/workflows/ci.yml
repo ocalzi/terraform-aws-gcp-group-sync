@@ -89,14 +89,16 @@ jobs:
 
       - name: Setup terraform-docs
         run: |
-          curl -sSLo terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.21.0/terraform-docs-v0.21.0-linux-amd64.tar.gz
-          tar -xzf terraform-docs.tar.gz
-          chmod +x terraform-docs
-          sudo mv terraform-docs /usr/local/bin/
+          TMPDIR=$(mktemp -d)
+          curl -sSLo "${TMPDIR}/terraform-docs.tar.gz" https://github.com/terraform-docs/terraform-docs/releases/download/v0.21.0/terraform-docs-v0.21.0-linux-amd64.tar.gz
+          tar -xzf "${TMPDIR}/terraform-docs.tar.gz" -C "${TMPDIR}"
+          chmod +x "${TMPDIR}/terraform-docs"
+          sudo mv "${TMPDIR}/terraform-docs" /usr/local/bin/
+          rm -rf "${TMPDIR}"
 
       - name: Check docs are up to date
         run: |
-          terraform-docs  markdown .
+          terraform-docs .
           git diff --exit-code README.md || (echo "README.md is out of date. Run 'terraform-docs .' and commit." && exit 1)
 
   security:
